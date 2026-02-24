@@ -1,36 +1,13 @@
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.commands.build.Commands;
-import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import io.github.cdimascio.dotenv.Dotenv;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.time.Duration;
-import java.util.regex.*;
+import java.util.regex.Pattern;
 
-public class Bot extends ListenerAdapter {
-
-    private static String getToken(){return Dotenv.load().get("TOKEN");}
-
-    public static void main(String[] args) {
-        JDA jda = JDABuilder.createDefault(getToken())
-                .addEventListeners(new Bot())
-                .enableIntents(GatewayIntent.MESSAGE_CONTENT)
-                .build();
-
-        CommandListUpdateAction commands = jda.updateCommands();
-
-        commands.addCommands(Commands.slash("greet", "Sends a hi message, pinging user that sent that message"));
-
-        commands.queue();
-    }
-
+public class MessageListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent event){
         if(event.getAuthor().isBot()) return;
@@ -46,20 +23,6 @@ public class Bot extends ListenerAdapter {
                         .queue();
             }
         }
-    }
-
-    @Override
-    public void onSlashCommandInteraction(SlashCommandInteractionEvent event){
-        switch(event.getName()){
-            case "greet":
-                Member member = event.getMember();
-                greetMember(event, member);
-                break;
-        }
-    }
-
-    public void greetMember(SlashCommandInteractionEvent event, Member member){
-        event.reply("Hi " + member.getAsMention()).queue();
     }
 
     public void replyToMessage(MessageReceivedEvent event, Message message){
