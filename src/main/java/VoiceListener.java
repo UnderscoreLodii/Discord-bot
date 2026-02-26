@@ -1,4 +1,3 @@
-import io.github.cdimascio.dotenv.Dotenv;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -6,24 +5,16 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 
 public class VoiceListener extends ListenerAdapter {
 
-    private final VoiceConnectionHandler voiceConnectionHandler;
-    private GalbanTimer galbanTimer;
+    private final VoiceJoinIntroManager voiceJoinIntroManager;
 
-    public VoiceListener(VoiceConnectionHandler voiceConnectionHandler) {
-        this.voiceConnectionHandler = voiceConnectionHandler;
+    public VoiceListener(VoiceJoinIntroManager voiceJoinIntroManager) {
+        this.voiceJoinIntroManager = voiceJoinIntroManager;
     }
 
     @Override
     public void onGuildVoiceUpdate(GuildVoiceUpdateEvent event) {
-        Member member = event.getEntity();
+        Member member = event.getMember();
         AudioChannelUnion channelJoined = event.getChannelJoined();
-
-        if(galbanTimer.isReady() && member.getId().equals(Dotenv.load().get("ID_GALBAN"))) {
-            handleGalbanJoin(event, channelJoined);
-        }
-    }
-
-    private void handleGalbanJoin(GuildVoiceUpdateEvent event, AudioChannelUnion channelJoined) {
-        galbanTimer.galbanJoined();
+        if(channelJoined != null)voiceJoinIntroManager.handleMemberJoiningVoice(channelJoined, member);
     }
 }

@@ -7,10 +7,13 @@ public class Main {
     public static void main(String[] args) {
         String token = Dotenv.load().get("TOKEN");
 
-        VoiceConnectionHandler voiceConnectionHandler = new VoiceConnectionHandler();
-        CommandManager commandManager = new CommandManager(voiceConnectionHandler);
+
+        CommandManager commandManager = new CommandManager();
         MessageListener messageListener = new MessageListener();
-        VoiceListener voiceListener = new VoiceListener(voiceConnectionHandler);
+
+        VoiceConnectionHandler voiceConnectionHandler = new VoiceConnectionHandler();
+        VoiceJoinIntroManager voiceJoinIntroManager = new VoiceJoinIntroManager(voiceConnectionHandler);
+        VoiceListener voiceListener = new VoiceListener(voiceJoinIntroManager);
 
         JDA jda = JDABuilder.createDefault(token)
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_VOICE_STATES)
