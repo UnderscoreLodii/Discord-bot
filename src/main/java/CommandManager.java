@@ -8,9 +8,11 @@ import java.util.Map;
 
 public class CommandManager extends ListenerAdapter {
 
+    private final VoiceConnectionHandler voiceConnectionHandler;
     public final Map<String, IBotCommand> commands = new HashMap<>();
 
-    public CommandManager(){
+    public CommandManager(VoiceConnectionHandler voiceConnectionHandler) {
+        this.voiceConnectionHandler = voiceConnectionHandler;
         addCommand(new GreetCommand());
     }
 

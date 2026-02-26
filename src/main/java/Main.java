@@ -7,12 +7,14 @@ public class Main {
     public static void main(String[] args) {
         String token = Dotenv.load().get("TOKEN");
 
-        CommandManager commandManager = new CommandManager();
+        VoiceConnectionHandler voiceConnectionHandler = new VoiceConnectionHandler();
+        CommandManager commandManager = new CommandManager(voiceConnectionHandler);
         MessageListener messageListener = new MessageListener();
+        VoiceListener voiceListener = new VoiceListener(voiceConnectionHandler);
 
         JDA jda = JDABuilder.createDefault(token)
-                .enableIntents(GatewayIntent.MESSAGE_CONTENT)
-                .addEventListeners(commandManager, messageListener)
+                .enableIntents(GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_VOICE_STATES)
+                .addEventListeners(commandManager, messageListener, voiceListener)
                 .build();
 
         commandManager.registerCommands(jda.updateCommands());
