@@ -11,7 +11,8 @@ public class Main {
         CommandManager commandManager = new CommandManager();
         MessageListener messageListener = new MessageListener();
 
-        VoiceConnectionHandler voiceConnectionHandler = new VoiceConnectionHandler();
+        GlobalAudioManager audioPlayerManager = new GlobalAudioManager();
+        VoiceConnectionHandler voiceConnectionHandler = new VoiceConnectionHandler(audioPlayerManager);
         VoiceJoinIntroManager voiceJoinIntroManager = new VoiceJoinIntroManager(voiceConnectionHandler);
         VoiceListener voiceListener = new VoiceListener(voiceJoinIntroManager);
 

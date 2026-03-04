@@ -2,8 +2,13 @@ import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 
 public class VoiceConnectionHandler {
 
+    private final GlobalAudioManager globalAudioManager;
 
-    public void connectToChannelAndPlayAudio(AudioChannelUnion channelJoined, String audioPath) {
+    VoiceConnectionHandler(GlobalAudioManager audioPlayerManager) {
+        this.globalAudioManager = audioPlayerManager;
+    }
 
+    public void connectToChannelAndPlayAudio(AudioChannelUnion channel, String audioPath) {
+        GuildMusicManager gmm = globalAudioManager.getGuildMusicManagerForGivenGuildId(channel.getGuild().getIdLong());
     }
 }
