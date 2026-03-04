@@ -4,6 +4,6 @@ public class GlobalAudioManager {
     HashMap<Long, GuildMusicManager> guildMusicManagerMap = new HashMap<>();
 
     GuildMusicManager getGuildMusicManagerForGivenGuildId(Long guildId) {
-        return guildMusicManagerMap.computeIfAbsent(guildId, );
+        return guildMusicManagerMap.get(guildId);
     }
 }
