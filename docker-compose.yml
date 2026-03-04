@@ -4,9 +4,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./.env:/app/.env  
-    ports:
-      - "8080:8080"
+      - ./.env:/app/.env
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - JAVA_OPTS=-XX:MaxRAMPercentage=75.0
