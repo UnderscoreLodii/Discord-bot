@@ -18,7 +18,10 @@ RUN set -eux; \
 FROM eclipse-temurin:25-jre
 WORKDIR /app
 
-COPY --from=build /tmp/app.jar /app/app.jar
+# Install audio codecs
+RUN apt-get update && apt-get install -y libopus0 && rm -rf /var/lib/apt/lists/*
 
-ENV JAVA_OPTS="-XX:MaxRAMPercentage=75.0 --enable-native-access=ALL-UNNAMED"
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/app.jar"]
+COPY --from=build /tmp/app.jar /app/app.jar
+COPY sexyback.mp3 /app/sexyback.mp3
+
+ENTRYPOINT ["java", "--enable-native-access=ALL-UNNAMED", "-XX:MaxRAMPercentage=75.0", "-jar", "/app/app.jar"]
