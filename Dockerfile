@@ -20,5 +20,5 @@ WORKDIR /app
 
 COPY --from=build /tmp/app.jar /app/app.jar
 
-ENV JAVA_OPTS="-XX:MaxRAMPercentage=75.0"
+ENV JAVA_OPTS="-XX:MaxRAMPercentage=75.0 --enable-native-access=ALL-UNNAMED"
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/app.jar"]
