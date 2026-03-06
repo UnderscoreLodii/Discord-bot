@@ -20,7 +20,6 @@ public class Main {
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_VOICE_STATES)
                 .addEventListeners(commandManager, messageListener, voiceListener)
                 .build();
-
         commandManager.registerCommands(jda.updateCommands());
     }
 }
