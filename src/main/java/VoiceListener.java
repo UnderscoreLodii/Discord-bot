@@ -15,6 +15,7 @@ public class VoiceListener extends ListenerAdapter {
     @Override
     public void onGuildVoiceUpdate(GuildVoiceUpdateEvent event) {
         Member member = event.getMember();
+        if(member.getUser().isBot()) return;
         AudioChannelUnion channelJoined = event.getChannelJoined();
         if(channelJoined != null)voiceJoinIntroManager.handleMemberJoiningVoice(channelJoined, member);
     }

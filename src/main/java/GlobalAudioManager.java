@@ -16,6 +16,7 @@ public class GlobalAudioManager {
     GlobalAudioManager() {
         audioPlayerManager = new DefaultAudioPlayerManager();
         AudioSourceManagers.registerRemoteSources(audioPlayerManager);
+        AudioSourceManagers.registerLocalSource(audioPlayerManager);
     }
 
     public void loadAndPlay(Guild guild, String path, Runnable onQueueEmpty) {

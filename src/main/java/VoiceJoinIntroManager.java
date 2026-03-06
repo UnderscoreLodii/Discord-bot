@@ -1,5 +1,4 @@
 import io.github.cdimascio.dotenv.Dotenv;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 
@@ -36,10 +35,10 @@ public class VoiceJoinIntroManager {
     private boolean handleCooldown(Long memberId) {
         IntroTimer timer = introTimer.get(memberId);
         if (timer == null){
-            introTimer.put(memberId, IntroTimer.buildTheTimerAndStart(600000));
+            introTimer.put(memberId, IntroTimer.buildTheTimerAndStart(60000));
         }
         else if (timer.isReady()){
-            timer.startTimer(600000);
+            timer.startTimer(60000);
         }
         else return false;
         return true;

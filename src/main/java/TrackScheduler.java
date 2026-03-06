@@ -20,9 +20,8 @@ public class TrackScheduler extends AudioEventAdapter {
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         super.onTrackEnd(player, track, endReason);
-        if(!nextTrack()){
-            onQueueEmpty.run();
-        }
+        //need to add check if queue is empty
+        onQueueEmpty.run();
     }
 
     public void queue(AudioTrack audioTrack) {
