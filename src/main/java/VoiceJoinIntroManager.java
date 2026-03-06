@@ -15,9 +15,7 @@ public class VoiceJoinIntroManager {
     public VoiceJoinIntroManager(VoiceConnectionHandler voiceConnectionHandler) {
         this.voiceConnectionHandler = voiceConnectionHandler;
         //temporary hard coded thing
-        //testing
-        //addIntroToGivenID(Long.parseLong(Dotenv.load().get("GALBAN_ID")), "sexyback.mp3");
-        addIntroToGivenID(Long.parseLong(Dotenv.load().get("TESTING_ID")), "sexyback.mp3");
+        addIntroToGivenID(Long.parseLong(Dotenv.load().get("GALBAN_ID")), "sexyback.mp3");
     }
 
     public void addIntroToGivenMember(Member member, String intro) {
