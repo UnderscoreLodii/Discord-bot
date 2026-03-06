@@ -27,7 +27,7 @@ public class VoiceJoinIntroManager {
 
     public void handleMemberJoiningVoice(AudioChannelUnion channelJoined, Member member) {
         Long  memberId = member.getIdLong();
-        if(handleCooldown(memberId)) voiceConnectionHandler.connectToChannelAndPlayAudio(channelJoined, intros.get(member.getIdLong()));
+        if(intros.containsKey(memberId) && handleCooldown(memberId)) voiceConnectionHandler.connectToChannelAndPlayAudio(channelJoined, intros.get(member.getIdLong()));
     }
 
     private boolean handleCooldown(Long memberId) {
