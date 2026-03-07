@@ -10,16 +10,15 @@ public class Main {
     public static void main(String[] args) {
         String token = Dotenv.load().get("TOKEN");
         //testing
-        //token = Dotenv.load().get("TESTING_TOKEN");
-
-
-        CommandManager commandManager = new CommandManager();
-        MessageListener messageListener = new MessageListener();
+        token = Dotenv.load().get("TESTING_TOKEN");
 
         GlobalAudioManager audioPlayerManager = new GlobalAudioManager();
         VoiceConnectionHandler voiceConnectionHandler = new VoiceConnectionHandler(audioPlayerManager);
-        VoiceJoinIntroManager voiceJoinIntroManager = new VoiceJoinIntroManager(voiceConnectionHandler);
-        VoiceListener voiceListener = new VoiceListener(voiceJoinIntroManager);
+        VoiceJoinIntroHandler voiceJoinIntroHandler = new VoiceJoinIntroHandler(voiceConnectionHandler);
+        VoiceListener voiceListener = new VoiceListener(voiceJoinIntroHandler);
+
+        CommandManager commandManager = new CommandManager(voiceJoinIntroHandler);
+        MessageListener messageListener = new MessageListener();
 
         DaveSessionFactory daveSessionFactory = new JDaveSessionFactory();
         AudioModuleConfig audioConfig = new AudioModuleConfig()

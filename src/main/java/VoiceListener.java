@@ -1,4 +1,3 @@
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -6,9 +5,9 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 
 public class VoiceListener extends ListenerAdapter {
 
-    private final VoiceJoinIntroManager voiceJoinIntroManager;
+    private final VoiceJoinIntroHandler voiceJoinIntroManager;
 
-    public VoiceListener(VoiceJoinIntroManager voiceJoinIntroManager) {
+    public VoiceListener(VoiceJoinIntroHandler voiceJoinIntroManager) {
         this.voiceJoinIntroManager = voiceJoinIntroManager;
     }
 

@@ -6,7 +6,7 @@ public class VoiceConnectionHandler {
 
     private final GlobalAudioManager globalAudioManager;
 
-    VoiceConnectionHandler(GlobalAudioManager audioPlayerManager) {
+    public VoiceConnectionHandler(GlobalAudioManager audioPlayerManager) {
         this.globalAudioManager = audioPlayerManager;
     }
 

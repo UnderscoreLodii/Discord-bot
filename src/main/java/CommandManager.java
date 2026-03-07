@@ -10,8 +10,9 @@ public class CommandManager extends ListenerAdapter {
 
     public final Map<String, IBotCommand> commands = new HashMap<>();
 
-    public CommandManager() {
+    public CommandManager(VoiceJoinIntroHandler voiceJoinIntroHandler) {
         addCommand(new GreetCommand());
+        addCommand(new SetIntroCommand(voiceJoinIntroHandler));
     }
 
     private void addCommand(IBotCommand command){

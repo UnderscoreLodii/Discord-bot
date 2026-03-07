@@ -15,13 +15,13 @@ public class TrackScheduler extends AudioEventAdapter {
     public TrackScheduler(AudioPlayer audioPlayer, Runnable onQueueEmpty) {
         this.audioPlayer = audioPlayer;
         this.onQueueEmpty = onQueueEmpty;
+        this.queue = new LinkedBlockingQueue<>();
     }
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         super.onTrackEnd(player, track, endReason);
-        //need to add check if queue is empty
-        onQueueEmpty.run();
+        if(!nextTrack()) onQueueEmpty.run();
     }
 
     public void queue(AudioTrack audioTrack) {

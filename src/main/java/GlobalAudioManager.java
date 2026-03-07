@@ -2,6 +2,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -13,7 +14,7 @@ public class GlobalAudioManager {
     private HashMap<Long, GuildMusicManager> guildMusicManagerMap = new HashMap<>();
     private final AudioPlayerManager audioPlayerManager;
 
-    GlobalAudioManager() {
+    public GlobalAudioManager() {
         audioPlayerManager = new DefaultAudioPlayerManager();
         AudioSourceManagers.registerRemoteSources(audioPlayerManager);
         AudioSourceManagers.registerLocalSource(audioPlayerManager);
@@ -21,7 +22,11 @@ public class GlobalAudioManager {
 
     public void loadAndPlay(Guild guild, String path, Runnable onQueueEmpty) {
         GuildMusicManager guildMusicManager = guildMusicManagerMap.computeIfAbsent(guild.getIdLong(), e -> new GuildMusicManager(audioPlayerManager, onQueueEmpty));
-        guild.getAudioManager().setSendingHandler(guildMusicManager.getSendHandler());
+
+        if (guild.getAudioManager().getSendingHandler() == null) {
+            guild.getAudioManager().setSendingHandler(guildMusicManager.getSendHandler());
+        }
+
         audioPlayerManager.loadItem(path, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
