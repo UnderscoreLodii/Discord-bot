@@ -10,12 +10,6 @@ public class GuildIntroManager {
     private Map<Long, String> intros = new HashMap<>();
     private Map<Long, IntroTimer> introTimer = new HashMap<>();
 
-    public GuildIntroManager() {
-        //temporary hard coded thing
-        intros.put(Long.parseLong(Dotenv.load().get("GALBAN_ID")), "sexyback.mp3");
-        intros.put(Long.parseLong(Dotenv.load().get("TESTING_ID")), "sexyback.mp3");
-    }
-
     public void addIntroToGivenId(Long Id, String intro) {
         intros.put(Id, intro);
     }
