@@ -1,18 +1,21 @@
+package commands;
+
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import services.IntroService;
 
 import java.util.List;
 
 public class DeleteIntroCommand implements IBotCommand {
 
-    private VoiceJoinIntroHandler voiceJoinIntroHandler;
+    private IntroService introService;
 
-    public DeleteIntroCommand(VoiceJoinIntroHandler voiceJoinIntroHandler) {
-        this.voiceJoinIntroHandler = voiceJoinIntroHandler;
+    public DeleteIntroCommand(IntroService introService) {
+        this.introService = introService;
     }
 
     @Override
@@ -47,7 +50,7 @@ public class DeleteIntroCommand implements IBotCommand {
         }
 
         try {
-            voiceJoinIntroHandler.deleteIntroFromGivenMember(targetMember);
+            introService.deleteIntroFromGivenMember(targetMember);
 
             event.getHook().editOriginal("Successfully deleted " + targetMember.getEffectiveName() + "'s intro").queue();
 

@@ -1,3 +1,7 @@
+package core;
+
+import audio.GlobalAudioManager;
+import audio.VoiceConnectionHandler;
 import club.minnced.discord.jdave.interop.JDaveSessionFactory;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -5,19 +9,22 @@ import net.dv8tion.jda.api.audio.AudioModuleConfig;
 import net.dv8tion.jda.api.audio.dave.DaveSessionFactory;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import io.github.cdimascio.dotenv.Dotenv;
+import services.IntroService;
+import services.MusicService;
 
 public class Main {
     public static void main(String[] args) {
         String token = Dotenv.load().get("TOKEN");
         //testing
-//        token = Dotenv.load().get("TESTING_TOKEN");
+        token = Dotenv.load().get("TESTING_TOKEN");
 
-        GlobalAudioManager audioPlayerManager = new GlobalAudioManager();
-        VoiceConnectionHandler voiceConnectionHandler = new VoiceConnectionHandler(audioPlayerManager);
-        VoiceJoinIntroHandler voiceJoinIntroHandler = new VoiceJoinIntroHandler(voiceConnectionHandler);
-        VoiceListener voiceListener = new VoiceListener(voiceJoinIntroHandler);
+        VoiceConnectionHandler voiceConnectionHandler = new VoiceConnectionHandler();
+        GlobalAudioManager globalAudioManager = new GlobalAudioManager(voiceConnectionHandler);
+        MusicService musicService = new MusicService(voiceConnectionHandler, globalAudioManager);
+        IntroService introService = new IntroService(musicService);
+        VoiceListener voiceListener = new VoiceListener(introService);
 
-        CommandManager commandManager = new CommandManager(voiceJoinIntroHandler);
+        CommandManager commandManager = new CommandManager(introService);
         MessageListener messageListener = new MessageListener();
 
         DaveSessionFactory daveSessionFactory = new JDaveSessionFactory();

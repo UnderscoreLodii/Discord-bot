@@ -1,27 +1,32 @@
+package audio;
+
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
-import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.managers.channel.concrete.VoiceChannelManager;
 
 import java.util.HashMap;
 
 public class GlobalAudioManager {
     private HashMap<Long, GuildMusicManager> guildMusicManagerMap = new HashMap<>();
     private final AudioPlayerManager audioPlayerManager;
+    private final VoiceConnectionHandler voiceConnectionHandler;
 
-    public GlobalAudioManager() {
+    public GlobalAudioManager(VoiceConnectionHandler voiceConnectionHandler) {
+        this.voiceConnectionHandler = voiceConnectionHandler;
         audioPlayerManager = new DefaultAudioPlayerManager();
         AudioSourceManagers.registerRemoteSources(audioPlayerManager);
         AudioSourceManagers.registerLocalSource(audioPlayerManager);
     }
 
-    public void loadAndPlay(Guild guild, String path, Runnable onQueueEmpty) {
-        GuildMusicManager guildMusicManager = guildMusicManagerMap.computeIfAbsent(guild.getIdLong(), e -> new GuildMusicManager(audioPlayerManager, onQueueEmpty));
+    public void loadAndPlay(Guild guild, String path) {
+        Long guildId = guild.getIdLong();
+        GuildMusicManager guildMusicManager = guildMusicManagerMap.computeIfAbsent(guildId, e -> new GuildMusicManager(guild, audioPlayerManager, voiceConnectionHandler));
 
         if (guild.getAudioManager().getSendingHandler() == null) {
             guild.getAudioManager().setSendingHandler(guildMusicManager.getSendHandler());

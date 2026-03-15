@@ -1,6 +1,9 @@
+package repositories;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import net.dv8tion.jda.api.entities.Member;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,23 +13,20 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class IntroDataManager {
+public class IntroDataRepository {
     private Map<Long, Map<Long, String>> intros = new HashMap<>();
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final ExecutorService saveExecutor = Executors.newSingleThreadExecutor();
 
-    public IntroDataManager() {
+    public IntroDataRepository() {
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         load();
     }
 
-    public Set<Long> getGuilds(){
-        return intros.keySet();
-    }
-
-    public Map<Long, String> getIntrosForGivenGuildId(Long guildId) {
-        return intros.get(guildId);
-
+    public String getIntro(Long guildId, Long userId) {
+        var guildIntros = intros.get(guildId);
+        if (guildIntros != null) return guildIntros.get(userId);
+        else return null;
     }
 
     public void addIntro(Long guildId, Long userId, String intro){
@@ -35,7 +35,9 @@ public class IntroDataManager {
     }
 
     public void deleteIntro(Long guildId, Long userId){
-        intros.get(guildId).remove(userId);
+        var guildIntros = intros.get(guildId);
+        guildIntros.remove(userId);
+        if (guildIntros.isEmpty()) intros.remove(guildId);
         saveExecutor.execute(this::save);
     }
 
