@@ -15,9 +15,6 @@ public class VoiceJoinIntroHandler {
         this.voiceConnectionHandler = voiceConnectionHandler;
         introDataManager = new IntroDataManager();
         loadIntros();
-        //temporary hard coded thing
-        guildIntroManagers.computeIfAbsent(Long.parseLong(Dotenv.load().get("HYPIXELFF_ID")), e -> new GuildIntroManager()).
-                addIntroToGivenId(Long.parseLong(Dotenv.load().get("GALBAN_ID")), "sexyback.mp3");
     }
 
     private void loadIntros(){
