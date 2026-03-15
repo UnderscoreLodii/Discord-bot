@@ -36,6 +36,15 @@ public class VoiceJoinIntroHandler {
         introDataManager.addIntro(guildId, userId, intro);
     }
 
+    public void deleteIntroFromGivenMember(Member member) {
+        Long guildId = member.getGuild().getIdLong();
+        Long userId = member.getUser().getIdLong();
+        GuildIntroManager guildIntroManager = guildIntroManagers.get(guildId);
+        if (guildIntroManager == null) return;
+        guildIntroManager.deleteIntroForGivenId(userId);
+        introDataManager.deleteIntro(guildId, userId);
+    }
+
     public void handleMemberJoiningVoice(AudioChannelUnion channelJoined, Member member) {
         Long  guildId = member.getGuild().getIdLong();
         GuildIntroManager guildIntroManager = guildIntroManagers.get(guildId);

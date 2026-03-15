@@ -18,6 +18,8 @@ public class GuildIntroManager {
         return intros.get(member.getIdLong());
     }
 
+    public void deleteIntroForGivenId(Long Id) {intros.remove(Id);}
+
     public boolean handleCooldown(Member member) {
         Long memberId =  member.getIdLong();
         IntroTimer timer = introTimer.get(memberId);

@@ -13,6 +13,7 @@ public class CommandManager extends ListenerAdapter {
     public CommandManager(VoiceJoinIntroHandler voiceJoinIntroHandler) {
         addCommand(new GreetCommand());
         addCommand(new SetIntroCommand(voiceJoinIntroHandler));
+        addCommand(new DeleteIntroCommand(voiceJoinIntroHandler));
     }
 
     private void addCommand(IBotCommand command){

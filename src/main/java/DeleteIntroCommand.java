@@ -1,6 +1,5 @@
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -8,28 +7,27 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.util.List;
 
-public class SetIntroCommand implements IBotCommand{
+public class DeleteIntroCommand implements IBotCommand {
 
     private VoiceJoinIntroHandler voiceJoinIntroHandler;
 
-    public SetIntroCommand(VoiceJoinIntroHandler  voiceJoinIntroHandler) {
+    public DeleteIntroCommand(VoiceJoinIntroHandler voiceJoinIntroHandler) {
         this.voiceJoinIntroHandler = voiceJoinIntroHandler;
     }
 
     @Override
     public String getName() {
-        return "setintro";
+        return "deleteintro";
     }
 
     @Override
     public String getDescription() {
-        return "sets intro to voice channel for you or for given user";
+        return "deletes the intro for you or given user";
     }
 
     @Override
     public List<OptionData> getOptions() {
-        return List.of(new OptionData(OptionType.STRING,"url", "Soundcloud link to intro").setRequired(true),
-                new OptionData(OptionType.USER,"target", "Target user (only for admins)"));
+        return List.of(new OptionData(OptionType.USER,"target", "Target user (only for admins)"));
     }
 
     @Override
@@ -37,7 +35,6 @@ public class SetIntroCommand implements IBotCommand{
         if(event.getMember()==null) return;
         event.deferReply(true).queue();
 
-        String url = event.getOption("url").getAsString();
         OptionMapping targetOption = event.getOption("target");
         Member targetMember = event.getMember();
 
@@ -50,12 +47,12 @@ public class SetIntroCommand implements IBotCommand{
         }
 
         try {
-            voiceJoinIntroHandler.addIntroToGivenMember(targetMember, url);
+            voiceJoinIntroHandler.deleteIntroFromGivenMember(targetMember);
 
-            event.getHook().editOriginal("Successfully set " + targetMember.getEffectiveName() + "'s intro to: " + url).queue();
+            event.getHook().editOriginal("Successfully deleted " + targetMember.getEffectiveName() + "'s intro").queue();
 
         } catch (Exception e) {
-            event.getHook().editOriginal("Something went wrong while setting the intro.").queue();
+            event.getHook().editOriginal("Something went wrong while deleting an intro.").queue();
             e.printStackTrace();
         }
     }

@@ -34,11 +34,16 @@ public class IntroDataManager {
         saveExecutor.execute(this::save);
     }
 
+    public void deleteIntro(Long guildId, Long userId){
+        intros.get(guildId).remove(userId);
+        saveExecutor.execute(this::save);
+    }
+
     private void save() {
         try {
             objectMapper.writeValue(new File("data/intros.json"), intros);
         } catch (IOException e) {
-            System.err.println("Failed to save intros to JSON" + e.getMessage());
+            System.err.println("Failed to save intros to JSON " + e.getMessage());
             e.printStackTrace();
         }
     }
