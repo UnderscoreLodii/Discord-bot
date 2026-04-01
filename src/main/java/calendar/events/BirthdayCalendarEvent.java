@@ -1,4 +1,4 @@
-package calendar.calendarevents;
+package calendar.events;
 
 import java.time.ZonedDateTime;
 

@@ -3,6 +3,7 @@ package commands;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -12,10 +13,15 @@ import java.util.List;
 
 public class SetIntroCommand implements IBotCommand {
 
-    private IntroService introService;
+    private final IntroService introService;
 
     public SetIntroCommand(IntroService introService) {
         this.introService = introService;
+    }
+
+    @Override
+    public DefaultMemberPermissions getPermissions() {
+        return DefaultMemberPermissions.ENABLED;
     }
 
     @Override

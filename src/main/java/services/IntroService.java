@@ -11,9 +11,9 @@ public class IntroService {
     private final CooldownHandler cooldownHandler;
     private final IntroDataRepository introDataRepository;
 
-    public IntroService(MusicService musicService) {
+    public IntroService(MusicService musicService, IntroDataRepository introDataRepository) {
         this.musicService = musicService;
-        introDataRepository = new IntroDataRepository();
+        this.introDataRepository = introDataRepository;
         cooldownHandler = new CooldownHandler(60000L);
     }
 
