@@ -26,7 +26,7 @@ public class Main {
     public static void main(String[] args) {
         String token = Dotenv.load().get("TOKEN");
 //        testing
-        token = Dotenv.load().get("TESTING_TOKEN");
+//        token = Dotenv.load().get("TESTING_TOKEN");
 
         VoiceConnectionHandler voiceConnectionHandler = new VoiceConnectionHandler();
         GlobalAudioManager globalAudioManager = new GlobalAudioManager(voiceConnectionHandler);
