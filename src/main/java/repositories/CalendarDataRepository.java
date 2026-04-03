@@ -11,7 +11,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 public class CalendarDataRepository extends AbstractDataRepository<ConcurrentHashMap<Long, PriorityBlockingQueue<CalendarEvent>>> {
 
     public CalendarDataRepository() {
-        super(new TypeReference<ConcurrentHashMap<Long, PriorityBlockingQueue<CalendarEvent>>>() {}, "calendar");
+        super(new TypeReference<ConcurrentHashMap<Long, PriorityBlockingQueue<CalendarEvent>>>() {}, "calendar.json");
         objectMapper.registerModule(new JavaTimeModule())
                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         load();

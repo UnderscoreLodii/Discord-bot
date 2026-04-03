@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import services.CalendarService;
-import util.DateTimeParser;
+import calendar.utils.DateTimeParser;
 
 import java.time.DateTimeException;
 import java.time.ZonedDateTime;
@@ -43,7 +43,7 @@ public class SetBirthdayCommand implements IBotCommand {
         OptionData dayOption = new OptionData(OptionType.INTEGER,"day", "Day of the month as an integer", true);
         OptionData monthOption = new OptionData(OptionType.INTEGER,"month", "Month as an integer (1-12)", true);
         OptionData targetOption = new OptionData(OptionType.USER,"target", "Target user", true);
-        OptionData messageOption = new OptionData(OptionType.STRING,"message", "Message that will be sent on given date");
+        OptionData messageOption = new OptionData(OptionType.STRING,"message", "Message that will be sent on given date along with a ping");
         return List.of(dayOption, monthOption, targetOption, messageOption);
     }
 
@@ -65,8 +65,10 @@ public class SetBirthdayCommand implements IBotCommand {
             }
 
             //temorarily hardcoded timezone
-            ZonedDateTime time = DateTimeParser.parseDateTime("Europe/Warsaw", "00:00:00", day, month);
-            calendarService.setBirthday(guild.getIdLong(), time, target.getIdLong(), message);
+            ZonedDateTime time = DateTimeParser.parseDateTime("Europe/Warsaw", "00:00", day, month);
+            boolean isLeap = (day == 29 && month == 2);
+            calendarService.setBirthday(guild.getIdLong(), time, target.getIdLong(), message, isLeap);
+            event.getHook().editOriginal("Successfully set user's birthday").queue();
         }
         catch(DateTimeException e){
             String message = e.getMessage();

@@ -14,8 +14,9 @@ public class CalendarService {
         this.calendarDataRepository = calendarDataRepository;
     }
 
-    public void setBirthday(Long guildId, ZonedDateTime eventDate, Long targetId, String message) {
+    public void setBirthday(Long guildId, ZonedDateTime eventDate, Long targetId, String message, boolean isLeap) {
         //add a fix for when a user has multiple birthdays
-        calendarDataRepository.addCalendarEvent(guildId, new BirthdayCalendarEvent(eventDate, targetId, message));
+        calendarDataRepository.addCalendarEvent(guildId,
+                new BirthdayCalendarEvent(guildId ,eventDate, targetId, "<@" + targetId + "> " + message, isLeap));
     }
 }

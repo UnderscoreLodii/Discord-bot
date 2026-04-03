@@ -1,4 +1,4 @@
-package util;
+package calendar.utils;
 
 import exceptions.InvalidDateTimeFormatException;
 
@@ -33,14 +33,13 @@ public class DateTimeParser {
         ZonedDateTime result;
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of(timezone));
         if(day == 29 && month == 2){
-            int targetYear = now.getYear();
-            while(!Year.isLeap(targetYear)) targetYear++;
-            result = parseDateTime(timezone, timeString, day, month, targetYear);
-            if(!result.isAfter(now)) {
-                do {
-                    targetYear +=4;
-                } while(!Year.isLeap(targetYear));
-                    result = result.withYear(targetYear);
+            int year = now.getYear();
+            if(now.getMonthValue() > 2 || (now.getMonthValue() == 2 && now.getDayOfMonth() == 29)) year++;
+
+            if(Year.isLeap(year)){
+                result = parseDateTime(timezone, timeString, 29, 2, year);
+            } else {
+                result = parseDateTime(timezone, timeString, 1, 3, year);
             }
         }
         else {

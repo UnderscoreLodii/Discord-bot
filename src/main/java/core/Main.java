@@ -25,8 +25,8 @@ import services.MusicService;
 public class Main {
     public static void main(String[] args) {
         String token = Dotenv.load().get("TOKEN");
-        //testing
-//        token = Dotenv.load().get("TESTING_TOKEN");
+//        testing
+        token = Dotenv.load().get("TESTING_TOKEN");
 
         VoiceConnectionHandler voiceConnectionHandler = new VoiceConnectionHandler();
         GlobalAudioManager globalAudioManager = new GlobalAudioManager(voiceConnectionHandler);
@@ -37,9 +37,6 @@ public class Main {
 
         CalendarDataRepository calendarDataRepository = new CalendarDataRepository();
         CalendarService calendarService = new CalendarService(calendarDataRepository);
-
-        CalendarEventDispatcher calendarEventDispatcher = new CalendarEventDispatcher()
-                .addHandler(new BirthdayCalendarEventHandler(calendarDataRepository));
 
         CommandManager commandManager = new CommandManager()
                 .addCommand(new SetIntroCommand(introService))
@@ -58,6 +55,8 @@ public class Main {
                 .addEventListeners(commandManager, messageListener, voiceListener)
                 .build();
 
+        CalendarEventDispatcher calendarEventDispatcher = new CalendarEventDispatcher()
+                .addHandler(new BirthdayCalendarEventHandler(calendarDataRepository, jda));
         CalendarCheckerService calendarCheckerService = new CalendarCheckerService(calendarDataRepository, calendarEventDispatcher);
 
         try {

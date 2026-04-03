@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class IntroDataRepository extends AbstractDataRepository<ConcurrentHashMap<Long, ConcurrentHashMap<Long, String>>>{
 
     public IntroDataRepository() {
-        super(new TypeReference<ConcurrentHashMap<Long, ConcurrentHashMap<Long, String>>>() {}, "intros");
+        super(new TypeReference<ConcurrentHashMap<Long, ConcurrentHashMap<Long, String>>>() {}, "intros.json");
         load();
         if (this.obj == null) this.obj = new ConcurrentHashMap<>();
     }

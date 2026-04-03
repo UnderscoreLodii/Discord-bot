@@ -22,10 +22,12 @@ public abstract class CalendarEvent implements Comparable<CalendarEvent> {
 
     private EventType eventType;
     private ZonedDateTime eventDate;
+    private Long guildId;
 
     public CalendarEvent() {}
 
-    public CalendarEvent(EventType eventType,  ZonedDateTime eventDate) {
+    public CalendarEvent(Long guildId, EventType eventType,  ZonedDateTime eventDate) {
+        this.guildId = guildId;
         this.eventType = eventType;
         this.eventDate = eventDate;
     }
@@ -35,9 +37,11 @@ public abstract class CalendarEvent implements Comparable<CalendarEvent> {
         return this.eventDate.compareTo(o.eventDate);
     }
 
+    public Long getGuildId() {return guildId;}
     public EventType getEventType() {return eventType;}
     public ZonedDateTime getEventDate() {return eventDate;}
 
+    public void setGuildId(Long guildId) {this.guildId = guildId;}
     public void setEventType(EventType eventType) {this.eventType = eventType;}
     public void setEventDate(ZonedDateTime eventDate) {this.eventDate = eventDate;}
 }
