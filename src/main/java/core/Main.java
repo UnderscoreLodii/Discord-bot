@@ -2,10 +2,10 @@ package core;
 
 import audio.GlobalAudioManager;
 import audio.VoiceConnectionHandler;
-import calendar.CalendarEventDispatcher;
+import calendar.services.CalendarEventDispatcher;
 import calendar.eventhandlers.BirthdayCalendarEventHandler;
-import calendar.events.CalendarEvent;
 import club.minnced.discord.jdave.interop.JDaveSessionFactory;
+import commands.DeleteBirthdayCommand;
 import commands.DeleteIntroCommand;
 import commands.SetBirthdayCommand;
 import commands.SetIntroCommand;
@@ -19,8 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import repositories.CalendarDataRepository;
 import repositories.IntroDataRepository;
-import services.CalendarCheckerService;
-import services.CalendarService;
+import calendar.services.CalendarCheckerService;
+import calendar.services.CalendarBirthdayService;
 import services.IntroService;
 import services.MusicService;
 
@@ -40,12 +40,13 @@ public class Main {
         VoiceListener voiceListener = new VoiceListener(introService);
 
         CalendarDataRepository calendarDataRepository = new CalendarDataRepository();
-        CalendarService calendarService = new CalendarService(calendarDataRepository);
+        CalendarBirthdayService calendarBirthdayService = new CalendarBirthdayService(calendarDataRepository);
 
         CommandManager commandManager = new CommandManager()
                 .addCommand(new SetIntroCommand(introService))
                 .addCommand(new DeleteIntroCommand(introService))
-                .addCommand(new SetBirthdayCommand(calendarService));
+                .addCommand(new SetBirthdayCommand(calendarBirthdayService))
+                .addCommand(new DeleteBirthdayCommand(calendarBirthdayService));
 
         MessageListener messageListener = new MessageListener();
 

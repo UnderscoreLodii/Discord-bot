@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.CalendarService;
+import calendar.services.CalendarBirthdayService;
 import calendar.utils.DateTimeParser;
 
 import java.time.DateTimeException;
@@ -20,10 +20,10 @@ import java.util.List;
 public class SetBirthdayCommand implements IBotCommand {
 
     private static final Logger log = LoggerFactory.getLogger(SetBirthdayCommand.class);
-    private final CalendarService calendarService;
+    private final CalendarBirthdayService calendarBirthdayService;
 
-    public SetBirthdayCommand(CalendarService calendarService){
-        this.calendarService = calendarService;
+    public SetBirthdayCommand(CalendarBirthdayService calendarBirthdayService){
+        this.calendarBirthdayService = calendarBirthdayService;
     }
 
     @Override
@@ -58,8 +58,8 @@ public class SetBirthdayCommand implements IBotCommand {
         try {
             Guild guild = event.getGuild();
             Member target = event.getOption("target").getAsMember();
-            Integer day = event.getOption("day").getAsInt();
-            Integer month = event.getOption("month").getAsInt();
+            int day = event.getOption("day").getAsInt();
+            int month = event.getOption("month").getAsInt();
             OptionMapping messageOption = event.getOption("message");
             String message = "Happy Birthday!";
 
@@ -67,11 +67,11 @@ public class SetBirthdayCommand implements IBotCommand {
                 message = event.getOption("message").getAsString();
             }
 
-            //temorarily hardcoded timezone
-            ZonedDateTime time = DateTimeParser.parseDateTime("Europe/Warsaw", "00:00", day, month);
-            boolean isLeap = (day == 29 && month == 2);
-            calendarService.setBirthday(guild.getIdLong(), time, target.getIdLong(), message, isLeap);
-            event.getHook().editOriginal("Successfully set user's birthday").queue();
+            //temporary hardcode to null till i add optional timezone option
+            if (calendarBirthdayService.setBirthday(guild.getIdLong(), target.getIdLong(), day, month, null, message)){
+                event.getHook().editOriginal("Successfully set user's birthday").queue();
+            }
+            event.getHook().editOriginal("User already has a birthday set, please use /deleteBirthday or /editBirthday").queue();
         }
         catch(DateTimeException e){
             String message = e.getMessage();

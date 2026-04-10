@@ -1,4 +1,4 @@
-package calendar;
+package calendar.services;
 
 import calendar.eventhandlers.CalendarEventHandler;
 import calendar.events.CalendarEvent;

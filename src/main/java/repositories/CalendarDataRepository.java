@@ -23,6 +23,15 @@ public class CalendarDataRepository extends AbstractDataRepository<ConcurrentHas
         save();
     }
 
+    public void deleteCalendarEvent(Long guildId, CalendarEvent calendarEvent ){
+        obj.get(guildId).remove(calendarEvent);
+        save();
+    }
+
+    public PriorityBlockingQueue<CalendarEvent> getQueueForGivenGuild(Long guildId){
+        return obj.get(guildId);
+    }
+
     public CalendarEvent pollFromGivenGuild(Long guildId) {
         var queue = obj.get(guildId);
         CalendarEvent result = queue.poll();
