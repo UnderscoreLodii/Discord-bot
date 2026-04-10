@@ -8,6 +8,8 @@ import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import services.CalendarService;
 import calendar.utils.DateTimeParser;
 
@@ -17,6 +19,7 @@ import java.util.List;
 
 public class SetBirthdayCommand implements IBotCommand {
 
+    private static final Logger log = LoggerFactory.getLogger(SetBirthdayCommand.class);
     private final CalendarService calendarService;
 
     public SetBirthdayCommand(CalendarService calendarService){
@@ -73,7 +76,7 @@ public class SetBirthdayCommand implements IBotCommand {
         catch(DateTimeException e){
             String message = e.getMessage();
             event.getHook().editOriginal(message).queue();
-            System.err.println(message);
+            log.error(message, e);
         }
     }
 }

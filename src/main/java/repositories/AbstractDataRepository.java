@@ -3,6 +3,8 @@ package repositories;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 abstract public class AbstractDataRepository<T> {
+    private final Logger log = LoggerFactory.getLogger(getClass());
     protected final ObjectMapper objectMapper = new ObjectMapper();
     private final ExecutorService saveExecutor = Executors.newSingleThreadExecutor();
     protected T obj;
@@ -30,9 +33,9 @@ abstract public class AbstractDataRepository<T> {
                     file.getParentFile().mkdirs();
                 }
                 objectMapper.writeValue(file, obj);
+                log.debug("Successfully saved {}", fileName);
             } catch (IOException e) {
-                System.err.println("Failed to save " + fileName + " " + e.getMessage());
-                e.printStackTrace();
+                log.error("Failed to save {}", fileName, e);
             }
         });
     }
@@ -40,15 +43,14 @@ abstract public class AbstractDataRepository<T> {
     protected void load() {
         File file = new File("data/" + fileName);
         if(!file.exists()){
-            System.err.println("Failed to load " + fileName + ", file doesn't exist");
+            log.warn("Creating fresh database, {} doesn't exist", fileName);
             return;
         }
         try{
             obj = objectMapper.readValue(file, typeReference);
-            System.out.println("Successfully loaded " + fileName);
+            log.info("Successfully loaded {}", fileName);
         } catch (IOException e){
-            System.err.println("Failed to load " + fileName + " " + e.getMessage());
-            e.printStackTrace();
+            log.error("Failed to load {}", fileName, e);
         }
     }
 }

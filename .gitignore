@@ -41,4 +41,8 @@ build/
 .env
 data/
 
+#Ignore log files
+logs/
+*.log
+
 .idea

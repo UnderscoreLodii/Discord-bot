@@ -7,12 +7,15 @@ import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import services.IntroService;
 
 import java.util.List;
 
 public class SetIntroCommand implements IBotCommand {
 
+    private static final Logger log = LoggerFactory.getLogger(SetIntroCommand.class);
     private final IntroService introService;
 
     public SetIntroCommand(IntroService introService) {
@@ -57,6 +60,11 @@ public class SetIntroCommand implements IBotCommand {
             }
         }
 
+        if (targetMember == null) {
+            event.getHook().editOriginal("❌ Could not find that user in this server.").queue();
+            return;
+        }
+
         try {
             introService.addIntroToGivenMember(targetMember, url);
 
@@ -64,7 +72,7 @@ public class SetIntroCommand implements IBotCommand {
 
         } catch (Exception e) {
             event.getHook().editOriginal("Something went wrong while setting the intro.").queue();
-            e.printStackTrace();
+            log.error("Failed to set intro for user {}", targetMember.getId(), e);
         }
     }
 }
