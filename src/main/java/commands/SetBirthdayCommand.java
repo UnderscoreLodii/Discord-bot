@@ -11,10 +11,8 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import calendar.services.CalendarBirthdayService;
-import calendar.utils.DateTimeParser;
 
 import java.time.DateTimeException;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 public class SetBirthdayCommand implements IBotCommand {
@@ -43,11 +41,11 @@ public class SetBirthdayCommand implements IBotCommand {
 
     @Override
     public List<OptionData> getOptions() {
+        OptionData targetOption = new OptionData(OptionType.USER,"target", "Target user", true);
         OptionData dayOption = new OptionData(OptionType.INTEGER,"day", "Day of the month as an integer", true);
         OptionData monthOption = new OptionData(OptionType.INTEGER,"month", "Month as an integer (1-12)", true);
-        OptionData targetOption = new OptionData(OptionType.USER,"target", "Target user", true);
         OptionData messageOption = new OptionData(OptionType.STRING,"message", "Message that will be sent on given date along with a ping");
-        return List.of(dayOption, monthOption, targetOption, messageOption);
+        return List.of(targetOption, dayOption, monthOption, messageOption);
     }
 
     @Override
@@ -71,7 +69,7 @@ public class SetBirthdayCommand implements IBotCommand {
             if (calendarBirthdayService.setBirthday(guild.getIdLong(), target.getIdLong(), day, month, null, message)){
                 event.getHook().editOriginal("Successfully set user's birthday").queue();
             }
-            event.getHook().editOriginal("User already has a birthday set, please use /deleteBirthday or /editBirthday").queue();
+            else event.getHook().editOriginal("User already has a birthday set, please use /deleteBirthday or /editBirthday").queue();
         }
         catch(DateTimeException e){
             String message = e.getMessage();

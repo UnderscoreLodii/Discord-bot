@@ -3,7 +3,6 @@ package core;
 import commands.IBotCommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
@@ -21,14 +20,22 @@ public class CommandManager extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event){
-        commands.get(event.getName()).execute(event);
+        IBotCommand command = commands.get(event.getName());
+        if (command == null) {
+            event.reply("❌ This command no longer exists or is being updated!").queue();
+            return;
+        }
+        command.execute(event);
     }
 
     public void registerCommands(CommandListUpdateAction updateAction){
         for(IBotCommand command : commands.values()){
-            CommandData commandData = Commands.slash(command.getName(), command.getDescription())
-                    .addOptions(command.getOptions())
+            var commandData = Commands.slash(command.getName(), command.getDescription())
                     .setDefaultPermissions(command.getPermissions());
+
+            if (!command.getSubcommands().isEmpty()) commandData.addSubcommands(command.getSubcommands());
+            else if (!command.getOptions().isEmpty()) commandData.addOptions(command.getOptions());
+
             updateAction.addCommands(commandData);
         }
         updateAction.queue();

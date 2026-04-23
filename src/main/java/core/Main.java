@@ -5,10 +5,7 @@ import audio.VoiceConnectionHandler;
 import calendar.services.CalendarEventDispatcher;
 import calendar.eventhandlers.BirthdayCalendarEventHandler;
 import club.minnced.discord.jdave.interop.JDaveSessionFactory;
-import commands.DeleteBirthdayCommand;
-import commands.DeleteIntroCommand;
-import commands.SetBirthdayCommand;
-import commands.SetIntroCommand;
+import commands.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.audio.AudioModuleConfig;
@@ -46,7 +43,8 @@ public class Main {
                 .addCommand(new SetIntroCommand(introService))
                 .addCommand(new DeleteIntroCommand(introService))
                 .addCommand(new SetBirthdayCommand(calendarBirthdayService))
-                .addCommand(new DeleteBirthdayCommand(calendarBirthdayService));
+                .addCommand(new DeleteBirthdayCommand(calendarBirthdayService))
+                .addCommand(new EditBirthdayCommand(calendarBirthdayService));
 
         MessageListener messageListener = new MessageListener();
 
