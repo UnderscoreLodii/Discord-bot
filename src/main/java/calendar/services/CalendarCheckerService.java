@@ -1,6 +1,5 @@
-package services;
+package calendar.services;
 
-import calendar.CalendarEventDispatcher;
 import repositories.CalendarDataRepository;
 
 import java.time.ZonedDateTime;

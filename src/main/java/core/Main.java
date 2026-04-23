@@ -2,28 +2,29 @@ package core;
 
 import audio.GlobalAudioManager;
 import audio.VoiceConnectionHandler;
-import calendar.CalendarEventDispatcher;
+import calendar.services.CalendarEventDispatcher;
 import calendar.eventhandlers.BirthdayCalendarEventHandler;
-import calendar.events.CalendarEvent;
 import club.minnced.discord.jdave.interop.JDaveSessionFactory;
-import commands.DeleteIntroCommand;
-import commands.SetBirthdayCommand;
-import commands.SetIntroCommand;
+import commands.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.audio.AudioModuleConfig;
 import net.dv8tion.jda.api.audio.dave.DaveSessionFactory;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import io.github.cdimascio.dotenv.Dotenv;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import repositories.CalendarDataRepository;
 import repositories.IntroDataRepository;
-import services.CalendarCheckerService;
-import services.CalendarService;
+import calendar.services.CalendarCheckerService;
+import calendar.services.CalendarBirthdayService;
 import services.IntroService;
 import services.MusicService;
 
 public class Main {
-    public static void main(String[] args) {
+    private static final Logger log = LoggerFactory.getLogger(Main.class);
+
+    static void main(String[] args) {
         String token = Dotenv.load().get("TOKEN");
 //        testing
 //        token = Dotenv.load().get("TESTING_TOKEN");
@@ -36,12 +37,14 @@ public class Main {
         VoiceListener voiceListener = new VoiceListener(introService);
 
         CalendarDataRepository calendarDataRepository = new CalendarDataRepository();
-        CalendarService calendarService = new CalendarService(calendarDataRepository);
+        CalendarBirthdayService calendarBirthdayService = new CalendarBirthdayService(calendarDataRepository);
 
         CommandManager commandManager = new CommandManager()
                 .addCommand(new SetIntroCommand(introService))
                 .addCommand(new DeleteIntroCommand(introService))
-                .addCommand(new SetBirthdayCommand(calendarService));
+                .addCommand(new SetBirthdayCommand(calendarBirthdayService))
+                .addCommand(new DeleteBirthdayCommand(calendarBirthdayService))
+                .addCommand(new EditBirthdayCommand(calendarBirthdayService));
 
         MessageListener messageListener = new MessageListener();
 
@@ -63,11 +66,10 @@ public class Main {
             jda.awaitReady();
             commandManager.registerCommands(jda.updateCommands());
             calendarCheckerService.start();
-            System.out.println("Bot is online and ready!");
+            log.info("Bot is online and ready!");
         }
         catch (InterruptedException e){
-            System.err.println("The bot's startup was interrupted!");
-            e.printStackTrace();
+            log.error("The bot's startup was interrupted!", e);
         }
     }
 }

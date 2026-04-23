@@ -5,6 +5,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.PriorityBlockingQueue;
 
@@ -21,6 +23,18 @@ public class CalendarDataRepository extends AbstractDataRepository<ConcurrentHas
     public void addCalendarEvent(Long guildId, CalendarEvent calendarEvent ) {
         obj.computeIfAbsent(guildId, e -> new PriorityBlockingQueue<>()).add(calendarEvent);
         save();
+    }
+
+    public void deleteCalendarEvent(Long guildId, CalendarEvent calendarEvent ){
+        var queue = obj.get(guildId);
+        if (queue == null) return;
+        queue.remove(calendarEvent);
+        if (queue.isEmpty()) obj.remove(guildId);
+        save();
+    }
+
+    public Collection<CalendarEvent> getEventsForGivenGuild(Long guildId){
+        return Collections.unmodifiableCollection(obj.getOrDefault(guildId, new PriorityBlockingQueue<>()));
     }
 
     public CalendarEvent pollFromGivenGuild(Long guildId) {

@@ -7,12 +7,15 @@ import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import services.IntroService;
 
 import java.util.List;
 
 public class DeleteIntroCommand implements IBotCommand {
 
+    private static final Logger log = LoggerFactory.getLogger(DeleteIntroCommand.class);
     private IntroService introService;
 
     public DeleteIntroCommand(IntroService introService) {
@@ -54,6 +57,10 @@ public class DeleteIntroCommand implements IBotCommand {
                 return;
             }
         }
+        if (targetMember == null) {
+            event.getHook().editOriginal("❌ Could not find that user in this server.").queue();
+            return;
+        }
 
         try {
             introService.deleteIntroFromGivenMember(targetMember);
@@ -62,7 +69,7 @@ public class DeleteIntroCommand implements IBotCommand {
 
         } catch (Exception e) {
             event.getHook().editOriginal("Something went wrong while deleting an intro.").queue();
-            e.printStackTrace();
+            log.error("Failed to delete intro for user {}", targetMember.getId(), e);
         }
     }
 }
