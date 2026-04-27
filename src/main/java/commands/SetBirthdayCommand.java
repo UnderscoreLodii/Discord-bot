@@ -66,7 +66,7 @@ public class SetBirthdayCommand implements IBotCommand {
             }
 
             //temporary hardcode to null till i add optional timezone option
-            if (calendarBirthdayService.setBirthday(guild.getIdLong(), target.getIdLong(), day, month, null, message)){
+            if (calendarBirthdayService.setBirthday(guild.getIdLong(), target.getIdLong(), month, day, null, message)){
                 event.getHook().editOriginal("Successfully set user's birthday").queue();
             }
             else event.getHook().editOriginal("User already has a birthday set, please use /deleteBirthday or /editBirthday").queue();
