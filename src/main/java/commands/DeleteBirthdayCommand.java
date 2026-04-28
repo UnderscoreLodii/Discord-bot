@@ -48,6 +48,6 @@ public class DeleteBirthdayCommand implements IBotCommand{
         Member target = event.getOption("target").getAsMember();
 
         calendarBirthdayService.deleteBirthdayFromMember(guild.getIdLong(), target.getIdLong());
-        event.getHook().editOriginal("Successfully deleted user's birthday");
+        event.getHook().editOriginal("Successfully deleted user's birthday").queue();
     }
 }

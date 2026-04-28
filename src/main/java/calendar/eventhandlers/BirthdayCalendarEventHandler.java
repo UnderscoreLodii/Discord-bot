@@ -29,7 +29,7 @@ public class BirthdayCalendarEventHandler implements CalendarEventHandler {
         //temporary hard coded channel for sending wishes. Gonna change it when I add config feature
         String channelId = Dotenv.load().get("CHANNEL_ID");
 //        testing
-//        channelId = Dotenv.load().get("TEST_CHANNEL_ID");
+        channelId = Dotenv.load().get("TEST_CHANNEL_ID");
         TextChannel channel = jda.getTextChannelById(channelId);
 
         if(channel != null) {
