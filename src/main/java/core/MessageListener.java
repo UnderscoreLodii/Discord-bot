@@ -17,7 +17,7 @@ public class MessageListener extends ListenerAdapter {
         Message message = event.getMessage();
         Member member = event.getMember();
 
-        if(message.getMentions().isMentioned(event.getJDA().getSelfUser())){
+        if(message.getMentions().isMentioned(event.getJDA().getSelfUser(), Message.MentionType.USER)){
             handlePing(event, message);
         }
 
