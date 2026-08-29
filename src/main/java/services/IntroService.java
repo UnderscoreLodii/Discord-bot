@@ -14,7 +14,7 @@ public class IntroService {
     public IntroService(MusicService musicService, IntroDataRepository introDataRepository) {
         this.musicService = musicService;
         this.introDataRepository = introDataRepository;
-        cooldownHandler = new CooldownHandler(60000L);
+        cooldownHandler = new CooldownHandler(300000L);
     }
 
     public void addIntroToGivenMember(Member member, String intro) {
@@ -31,8 +31,12 @@ public class IntroService {
         Long guildId = member.getGuild().getIdLong();
         Long userId = member.getUser().getIdLong();
         String intro = introDataRepository.getIntro(guildId, userId);
-        if(intro != null && cooldownHandler.handleCooldown(guildId, userId)) {
+        if(intro != null && cooldownHandler.checkCooldown(guildId, userId)) {
             musicService.connectAndPlay(channelJoined, intro);
         }
+    }
+
+    public void handleMemberLeavingVoice(Member member) {
+        cooldownHandler.resetCooldown(member.getGuild().getIdLong(), member.getUser().getIdLong());
     }
 }
