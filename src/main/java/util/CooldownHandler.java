@@ -12,9 +12,6 @@ import java.util.concurrent.TimeUnit;
  * memory leaks across high-churn events (such as voice channel updates or command invocations).
  *
  * <p>This implementation is thread-safe and optimized for concurrent read/write operations.
- *
- * @author YourName
- * @version 1.0
  */
 public class CooldownHandler {
 
