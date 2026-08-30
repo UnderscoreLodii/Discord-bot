@@ -1,5 +1,6 @@
-package commands;
+package calendar.commands;
 
+import commands.IBotCommand;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;

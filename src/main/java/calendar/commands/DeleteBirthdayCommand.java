@@ -1,6 +1,7 @@
-package commands;
+package calendar.commands;
 
 import calendar.services.CalendarBirthdayService;
+import commands.IBotCommand;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -11,7 +12,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.util.List;
 
-public class DeleteBirthdayCommand implements IBotCommand{
+public class DeleteBirthdayCommand implements IBotCommand {
     private final CalendarBirthdayService calendarBirthdayService;
 
     public DeleteBirthdayCommand(CalendarBirthdayService calendarBirthdayService){

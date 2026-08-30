@@ -1,6 +1,7 @@
-package commands;
+package calendar.commands;
 
 import calendar.services.CalendarBirthdayService;
+import commands.IBotCommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -10,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class ShowBirthdayCommand  implements IBotCommand{
+public class ShowBirthdayCommand  implements IBotCommand {
 
     private static final Logger log = LoggerFactory.getLogger(ShowBirthdayCommand.class);
     private final CalendarBirthdayService calendarBirthdayService;

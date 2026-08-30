@@ -2,10 +2,14 @@ package core;
 
 import audio.GlobalAudioManager;
 import audio.VoiceConnectionHandler;
+import calendar.commands.DeleteBirthdayCommand;
+import calendar.commands.EditBirthdayCommand;
+import calendar.commands.SetBirthdayCommand;
 import calendar.services.CalendarEventDispatcher;
 import calendar.eventhandlers.BirthdayCalendarEventHandler;
 import club.minnced.discord.jdave.interop.JDaveSessionFactory;
 import commands.*;
+import messages.PingReceiver;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.audio.AudioModuleConfig;
@@ -44,7 +48,8 @@ public class Main {
                 .addCommand(new DeleteBirthdayCommand(calendarBirthdayService))
                 .addCommand(new EditBirthdayCommand(calendarBirthdayService));
 
-        MessageListener messageListener = new MessageListener();
+        PingReceiver pingReceiver = new PingReceiver();
+        MessageListener messageListener = new MessageListener(pingReceiver);
 
         DaveSessionFactory daveSessionFactory = new JDaveSessionFactory();
         AudioModuleConfig audioConfig = new AudioModuleConfig()

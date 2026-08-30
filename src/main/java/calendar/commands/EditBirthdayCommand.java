@@ -1,14 +1,13 @@
-package commands;
+package calendar.commands;
 
 import calendar.services.CalendarBirthdayService;
+import commands.IBotCommand;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.time.DateTimeException;
 import java.util.List;
 
-public class EditBirthdayCommand implements IBotCommand{
+public class EditBirthdayCommand implements IBotCommand {
 
     private static final Logger log = LoggerFactory.getLogger(EditBirthdayCommand.class);
     private final CalendarBirthdayService calendarBirthdayService;
