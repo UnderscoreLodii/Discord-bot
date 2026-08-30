@@ -3,10 +3,15 @@ package calendar.services;
 import calendar.events.BirthdayCalendarEvent;
 import calendar.events.CalendarEvent;
 import calendar.utils.DateTimeParser;
+import calendar.utils.UpcomingBirthdayView;
+import net.dv8tion.jda.api.entities.Member;
 import repositories.CalendarDataRepository;
 
 import java.time.DateTimeException;
 import java.time.ZonedDateTime;
+import java.time.format.TextStyle;
+import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -61,6 +66,31 @@ public class CalendarBirthdayService {
                 .ifPresent(birthdayCalendarEvent -> calendarDataRepository.deleteCalendarEvent(guildId, birthdayCalendarEvent));
     }
 
+    public UpcomingBirthdayView viewBirthdayForMember(Long guildId, Long targetId){
+        BirthdayCalendarEvent birthdayCalendarEvent = getOptionalBirthdayForMember(guildId, targetId).orElse(null);
+        if (birthdayCalendarEvent == null) return null;
+
+        ZonedDateTime date = birthdayCalendarEvent.getEventDate();
+        int day = date.getDayOfMonth();
+        String month = date.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+        String targetName = getMemberFromIdAndGuildId(guildId, targetId).getEffectiveName();
+
+        return new UpcomingBirthdayView(day, month, targetName);
+    }
+
+    public List<UpcomingBirthdayView> viewUpcomingBirthdayList(Long guildId){
+        return getBirthdaysForGivenGuildStream(guildId)
+                .sorted()
+                .map(e -> {
+                    ZonedDateTime date = e.getEventDate();
+                    int day = date.getDayOfMonth();
+                    String month = date.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+                    String targetName = getMemberFromIdAndGuildId(guildId, e.getTargetId()).getEffectiveName();
+                    return new UpcomingBirthdayView(day, month, targetName);
+                })
+                .toList();
+    }
+
     private Optional<BirthdayCalendarEvent> getOptionalBirthdayForMember(Long guildId, Long targetId){
          return getBirthdaysForGivenGuildStream(guildId)
                 .filter(e -> e.getTargetId().equals(targetId))
@@ -72,5 +102,9 @@ public class CalendarBirthdayService {
                 .stream()
                 .filter(e -> e.getEventType()== CalendarEvent.EventType.BIRTHDAY)
                 .map(BirthdayCalendarEvent.class::cast);
+    }
+
+    private Member getMemberFromIdAndGuildId(Long guildId, Long targetId){
+
     }
 }

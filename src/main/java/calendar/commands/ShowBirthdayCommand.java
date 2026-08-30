@@ -1,7 +1,11 @@
 package calendar.commands;
 
+import calendar.events.BirthdayCalendarEvent;
 import calendar.services.CalendarBirthdayService;
+import calendar.utils.UpcomingBirthdayView;
 import commands.IBotCommand;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -9,7 +13,10 @@ import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.ZonedDateTime;
+import java.time.format.TextStyle;
 import java.util.List;
+import java.util.Locale;
 
 public class ShowBirthdayCommand  implements IBotCommand {
 
@@ -40,12 +47,40 @@ public class ShowBirthdayCommand  implements IBotCommand {
         SubcommandData forUserSubcommand = new SubcommandData("foruser", "Show birthday for given user")
                 .addOption(OptionType.USER,"target", "Target user", true);
         SubcommandData upcomingSubcommand = new SubcommandData("upcoming", "Show list of upcoming birthdays");
-        return List.of(forUserSubcommand,upcomingSubcommand);
+        return List.of(forUserSubcommand/*,upcomingSubcommand*/);
     }
 
     @Override
     public void execute(SlashCommandInteractionEvent event) {
         if(event.getMember()==null) return;
         event.deferReply(true).queue();
+
+        String subcommand = event.getSubcommandName();
+        if (subcommand == null) return;
+
+        Guild guild = event.getGuild();
+
+        switch(subcommand) {
+            case "foruser":
+                Member target = event.getOption("target").getAsMember();
+
+                UpcomingBirthdayView view = calendarBirthdayService.viewBirthdayForMember(guild.getIdLong(), target.getIdLong());
+
+                if (view == null) event.getHook().editOriginal("No birthday found for given user").queue();
+                else {
+
+                    String message = view.targetName() + "'s birthday is on " + view.day() + " " + view.month();
+                    event.getHook().editOriginal(message).queue();
+                }
+                break;
+
+            case "upcoming":
+                var birthdays = calendarBirthdayService.viewUpcomingBirthdayList(guild.getIdLong());
+                if (birthdays.isEmpty()) event.getHook().editOriginal("No birthdays registered in this server").queue();
+                else {
+
+                }
+                break;
+        }
     }
 }
