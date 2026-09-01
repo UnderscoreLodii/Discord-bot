@@ -5,6 +5,7 @@ import audio.VoiceConnectionHandler;
 import calendar.commands.DeleteBirthdayCommand;
 import calendar.commands.EditBirthdayCommand;
 import calendar.commands.SetBirthdayCommand;
+import calendar.commands.ShowBirthdayCommand;
 import calendar.services.CalendarEventDispatcher;
 import calendar.eventhandlers.BirthdayCalendarEventHandler;
 import club.minnced.discord.jdave.interop.JDaveSessionFactory;
@@ -46,6 +47,7 @@ public class Main {
                 .addCommand(new DeleteIntroCommand(introService))
                 .addCommand(new SetBirthdayCommand(calendarBirthdayService))
                 .addCommand(new DeleteBirthdayCommand(calendarBirthdayService))
+                .addCommand(new ShowBirthdayCommand(calendarBirthdayService))
                 .addCommand(new EditBirthdayCommand(calendarBirthdayService));
 
         PingReceiver pingReceiver = new PingReceiver();

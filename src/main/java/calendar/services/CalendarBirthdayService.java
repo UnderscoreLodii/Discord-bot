@@ -73,9 +73,8 @@ public class CalendarBirthdayService {
         ZonedDateTime date = birthdayCalendarEvent.getEventDate();
         int day = date.getDayOfMonth();
         String month = date.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
-        String targetName = getMemberFromIdAndGuildId(guildId, targetId).getEffectiveName();
 
-        return new UpcomingBirthdayView(day, month, targetName);
+        return new UpcomingBirthdayView(day, month, targetId.toString());
     }
 
     public List<UpcomingBirthdayView> viewUpcomingBirthdayList(Long guildId){
@@ -85,7 +84,7 @@ public class CalendarBirthdayService {
                     ZonedDateTime date = e.getEventDate();
                     int day = date.getDayOfMonth();
                     String month = date.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
-                    String targetName = getMemberFromIdAndGuildId(guildId, e.getTargetId()).getEffectiveName();
+                    String targetName = e.getTargetId().toString();
                     return new UpcomingBirthdayView(day, month, targetName);
                 })
                 .toList();
@@ -102,9 +101,5 @@ public class CalendarBirthdayService {
                 .stream()
                 .filter(e -> e.getEventType()== CalendarEvent.EventType.BIRTHDAY)
                 .map(BirthdayCalendarEvent.class::cast);
-    }
-
-    private Member getMemberFromIdAndGuildId(Long guildId, Long targetId){
-
     }
 }
