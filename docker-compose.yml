@@ -5,7 +5,7 @@ services:
       - .env
     volumes:
       - ./.env:/app/.env
-      - ./.data:/app/data
+      - ./data:/app/data
       - ./logs:/app/logs
     environment:
       - SPRING_PROFILES_ACTIVE=prod
