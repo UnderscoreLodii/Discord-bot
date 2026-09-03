@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
+import java.util.Collections;
 import java.util.List;
 
 public class DeleteBirthdayCommand implements IBotCommand {
@@ -47,8 +48,13 @@ public class DeleteBirthdayCommand implements IBotCommand {
 
         Guild guild = event.getGuild();
         Member target = event.getOption("target").getAsMember();
+        Long targetId = target.getIdLong();
 
-        calendarBirthdayService.deleteBirthdayFromMember(guild.getIdLong(), target.getIdLong());
-        event.getHook().editOriginal("Successfully deleted user's birthday").queue();
+        calendarBirthdayService.deleteBirthdayFromMember(guild.getIdLong(), targetId);
+        String reply = "Successfully deleted " + "<@" + targetId + ">" + "'s birthday";
+        event.getHook()
+                .editOriginal(reply)
+                .setAllowedMentions(Collections.emptySet())
+                .queue();
     }
 }

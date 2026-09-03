@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import calendar.services.CalendarBirthdayService;
 
 import java.time.DateTimeException;
+import java.util.Collections;
 import java.util.List;
 
 public class SetBirthdayCommand implements IBotCommand {
@@ -66,11 +67,23 @@ public class SetBirthdayCommand implements IBotCommand {
                 message = event.getOption("message").getAsString();
             }
 
+            Long targetId = target.getIdLong();
+
             //temporary hardcode to null till i add optional timezone option
-            if (calendarBirthdayService.setBirthday(guild.getIdLong(), target.getIdLong(), month, day, null, message)){
-                event.getHook().editOriginal("Successfully set user's birthday").queue();
+            if (calendarBirthdayService.setBirthday(guild.getIdLong(), targetId, month, day, null, message)){
+                String reply = "Successfully set " + "<@" + targetId + ">" + "'s birthday";
+                event.getHook()
+                        .editOriginal(reply)
+                        .setAllowedMentions(Collections.emptySet())
+                        .queue();
             }
-            else event.getHook().editOriginal("User already has a birthday set, please use /deleteBirthday or /editBirthday").queue();
+            else {
+                String reply = "<@" + targetId + ">" + "already has a birthday set, please use /deleteBirthday or /editBirthday";
+                event.getHook()
+                        .editOriginal(reply)
+                        .setAllowedMentions(Collections.emptySet())
+                        .queue();
+            }
         }
         catch(DateTimeException e){
             String message = e.getMessage();

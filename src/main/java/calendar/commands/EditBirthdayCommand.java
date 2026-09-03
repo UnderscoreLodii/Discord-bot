@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.DateTimeException;
+import java.util.Collections;
 import java.util.List;
 
 public class EditBirthdayCommand implements IBotCommand {
@@ -61,6 +62,7 @@ public class EditBirthdayCommand implements IBotCommand {
 
         Guild guild = event.getGuild();
         Member target = event.getOption("target").getAsMember();
+        Long targetId = target.getIdLong();
 
         switch(subcommand) {
             case "date":
@@ -69,10 +71,20 @@ public class EditBirthdayCommand implements IBotCommand {
                     int month = event.getOption("month").getAsInt();
 
                     //temporary hardcode to null till i add optional timezone option
-                    if(calendarBirthdayService.rescheduleUsersBirthday(guild.getIdLong(), target.getIdLong(), month, day, null)){
-                        event.getHook().editOriginal("Successfully edited date of user's birthday").queue();
+                    if(calendarBirthdayService.rescheduleUsersBirthday(guild.getIdLong(), targetId, month, day, null)){
+                        String reply = "Successfully edited" + "<@" + targetId + ">" + "'s birthday date to " + day + "." + month;
+                        event.getHook()
+                                .editOriginal(reply)
+                                .setAllowedMentions(Collections.emptySet())
+                                .queue();
                     }
-                    else event.getHook().editOriginal("No birthday found for given user").queue();
+                    else {
+                        String reply = "No birthday found for " + "<@" + targetId + ">" + "'s birthday";
+                        event.getHook()
+                                .editOriginal(reply)
+                                .setAllowedMentions(Collections.emptySet())
+                                .queue();
+                    }
 
                 } catch (DateTimeException e) {
                     String message = e.getMessage();
@@ -84,10 +96,20 @@ public class EditBirthdayCommand implements IBotCommand {
             case "message":
                 String message = event.getOption("message").getAsString();
 
-                if(calendarBirthdayService.editUsersBirthday(guild.getIdLong(), target.getIdLong(), message)){
-                    event.getHook().editOriginal("Successfully edited message in user's birthday").queue();
+                if(calendarBirthdayService.editUsersBirthday(guild.getIdLong(), targetId, message)){
+                    String reply = "Successfully edited" + "<@" + targetId + ">" + "'s birthday message to " + message;
+                    event.getHook()
+                            .editOriginal(reply)
+                            .setAllowedMentions(Collections.emptySet())
+                            .queue();
                 }
-                else event.getHook().editOriginal("No birthday found for given user").queue();
+                else {
+                    String reply = "No birthday found for " + "<@" + targetId + ">" + "'s birthday";
+                    event.getHook()
+                            .editOriginal(reply)
+                            .setAllowedMentions(Collections.emptySet())
+                            .queue();
+                }
                 break;
         }
     }
