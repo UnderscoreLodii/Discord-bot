@@ -13,7 +13,7 @@ public class BirthdayCalendarEvent extends CalendarEvent {
     }
 
     public BirthdayCalendarEvent(Long guildId, ZonedDateTime eventDate,  Long targetId,  String message, Boolean isLeap) {
-        super(guildId, EventType.BIRTHDAY, eventDate);
+        super(EventType.BIRTHDAY, guildId, eventDate);
         this.targetId = targetId;
         this.message = message;
         this.isLeap = isLeap;

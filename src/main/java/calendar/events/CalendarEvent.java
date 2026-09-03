@@ -7,12 +7,13 @@ import java.time.ZonedDateTime;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
-        include =  JsonTypeInfo.As.PROPERTY,
+        include =  JsonTypeInfo.As.EXISTING_PROPERTY,
+        visible = true,
         property = "eventType"
 )
 
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = BirthdayCalendarEvent.class, name = "birthday")
+        @JsonSubTypes.Type(value = BirthdayCalendarEvent.class, name = "BIRTHDAY")
 })
 
 public abstract class CalendarEvent implements Comparable<CalendarEvent> {
@@ -26,7 +27,7 @@ public abstract class CalendarEvent implements Comparable<CalendarEvent> {
 
     public CalendarEvent() {}
 
-    public CalendarEvent(Long guildId, EventType eventType,  ZonedDateTime eventDate) {
+    public CalendarEvent(EventType eventType,  Long guildId, ZonedDateTime eventDate) {
         this.guildId = guildId;
         this.eventType = eventType;
         this.eventDate = eventDate;
