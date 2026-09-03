@@ -55,7 +55,7 @@ public class BirthdayCalendarEventHandler implements CalendarEventHandler {
             }
 
         } else {
-            newDate = birthdayEvent.getEventDate().plusYears(1);
+            newDate = birthdayEvent.getEventDate().withYear(birthdayEvent.getEventDate().getYear() + 1);
         }
 
         birthdayEvent.setEventDate(newDate);
