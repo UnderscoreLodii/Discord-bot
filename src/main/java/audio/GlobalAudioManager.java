@@ -4,23 +4,17 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
-import com.sedmelluq.discord.lavaplayer.source.bandcamp.BandcampAudioSourceManager;
-import com.sedmelluq.discord.lavaplayer.source.http.HttpAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
-import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager;
-import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioItem;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import core.Main;
 import net.dv8tion.jda.api.entities.Guild;
+import dev.lavalink.youtube.YoutubeAudioSourceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class GlobalAudioManager {
@@ -33,7 +27,15 @@ public class GlobalAudioManager {
     public GlobalAudioManager(VoiceConnectionHandler voiceConnectionHandler) {
         this.voiceConnectionHandler = voiceConnectionHandler;
         audioPlayerManager = new DefaultAudioPlayerManager();
-        AudioSourceManagers.registerRemoteSources(audioPlayerManager, SoundCloudAudioSourceManager.class);
+
+        AudioSourceManagers.registerRemoteSources(
+                audioPlayerManager,
+                SoundCloudAudioSourceManager.class,
+                com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager.class
+        );
+
+        audioPlayerManager.registerSourceManager(makeYoutubeSource());
+
         AudioSourceManagers.registerLocalSource(audioPlayerManager);
     }
 
@@ -89,5 +91,10 @@ public class GlobalAudioManager {
             guild.getAudioManager().setSendingHandler(guildMusicManager.getSendHandler());
         }
         return guildMusicManager;
+    }
+
+    private YoutubeAudioSourceManager makeYoutubeSource(){
+        YoutubeAudioSourceManager youtubeSource = new YoutubeAudioSourceManager();
+        return youtubeSource;
     }
 }
