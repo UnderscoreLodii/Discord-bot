@@ -9,10 +9,7 @@ import calendar.commands.ShowBirthdayCommand;
 import calendar.services.CalendarEventDispatcher;
 import calendar.eventhandlers.BirthdayCalendarEventHandler;
 import club.minnced.discord.jdave.interop.JDaveSessionFactory;
-import com.google.genai.Client;
 import commands.*;
-import goofy.JarvisReplier;
-import messages.PingReceiver;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.audio.AudioModuleConfig;
@@ -52,24 +49,6 @@ public class Main {
                 .addCommand(new ShowBirthdayCommand(calendarBirthdayService))
                 .addCommand(new EditBirthdayCommand(calendarBirthdayService));
 
-
-        Client geminiClient = Client.builder()
-                .apiKey(Dotenv.load().get("GOOGLE_AI_API_KEY"))
-                .build();
-
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            try {
-                System.out.println("Shutting down Gemini client...");
-                geminiClient.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }));
-
-        PingReceiver pingReceiver = new PingReceiver();
-        JarvisReplier jarvisReplier = new JarvisReplier(geminiClient);
-        MessageListener messageListener = new MessageListener(pingReceiver, jarvisReplier);
-
         DaveSessionFactory daveSessionFactory = new JDaveSessionFactory();
         AudioModuleConfig audioConfig = new AudioModuleConfig()
                 .withDaveSessionFactory(daveSessionFactory);
@@ -77,7 +56,7 @@ public class Main {
         JDA jda = JDABuilder.createDefault(token)
                 .setAudioModuleConfig(audioConfig)
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_VOICE_STATES)
-                .addEventListeners(commandManager, messageListener, voiceListener)
+                .addEventListeners(commandManager, voiceListener)
                 .build();
 
         CalendarEventDispatcher calendarEventDispatcher = new CalendarEventDispatcher()
